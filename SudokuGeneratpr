@@ -1,0 +1,88 @@
+import java.util.*;
+
+public class SudokuGenerator {
+
+    int[][] board = new int[9][9];
+
+    public static void main(String[] args) {
+        SudokuGenerator s = new SudokuGenerator();
+
+        s.generateBoard();
+        s.shuffleBoard();
+        s.remapNumbers(); 
+        s.printBoard();
+    }
+
+    public void generateBoard() {
+        for (int r = 0; r < 9; r++) {
+            for (int c = 0; c < 9; c++) {
+                board[r][c] = (r * 3 + r / 3 + c) % 9 + 1;
+            }
+        }
+    }
+
+    public void shuffleBoard() {
+        Random rand = new Random();
+
+        for (int i = 0; i < 3; i++) {
+            int base = i * 3;
+            swapRows(base + rand.nextInt(3), base + rand.nextInt(3));
+        }
+
+        for (int i = 0; i < 3; i++) {
+            int base = i * 3;
+            swapCols(base + rand.nextInt(3), base + rand.nextInt(3));
+        }
+    }
+
+    public void remapNumbers() {
+        ArrayList<Integer> nums = new ArrayList<>();
+
+        for (int i = 1; i <= 9; i++) {
+            nums.add(i);
+        }
+
+        Collections.shuffle(nums);
+
+        for (int r = 0; r < 9; r++) {
+            for (int c = 0; c < 9; c++) {
+                int original = board[r][c];
+                board[r][c] = nums.get(original - 1);
+            }
+        }
+    }
+
+    public void swapRows(int r1, int r2) {
+        int[] temp = board[r1];
+        board[r1] = board[r2];
+        board[r2] = temp;
+    }
+
+    public void swapCols(int c1, int c2) {
+        for (int i = 0; i < 9; i++) {
+            int temp = board[i][c1];
+            board[i][c1] = board[i][c2];
+            board[i][c2] = temp;
+        }
+    }
+
+    public void printBoard() {
+        for (int i = 0; i < 9; i++) {
+
+            if (i % 3 == 0 && i != 0) {
+                System.out.println("---------------------");
+            }
+
+            for (int j = 0; j < 9; j++) {
+
+                if (j % 3 == 0 && j != 0) {
+                    System.out.print("| ");
+                }
+
+                System.out.print(board[i][j] + " ");
+            }
+
+            System.out.println();
+        }
+    }
+}
